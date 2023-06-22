@@ -114,23 +114,45 @@ public class Java8HandsOn {
         System.out.println(ans);*/
 
         //Q: Find Nth highest salary using Java streams
-        Map<String, Integer> empMap = new HashMap<>();
-        empMap.put("anil", 1000);
-        empMap.put("bhavna", 1000);
+        /*Map<String, Integer> empMap = new HashMap<>();
+        empMap.put("anil", 1100);
+        empMap.put("bhavna", 1200);
         empMap.put("micael", 1500);
-        empMap.put("tom", 1600);
-        empMap.put("ankit", 1200);
-        empMap.put("daniel", 1700);
-        empMap.put("james", 1700);
+        empMap.put("tom", 1500);
+        empMap.put("ankit", 1900);
+        empMap.put("daniel", 1900);
+        empMap.put("james", 1900);
 
-        int n = 2;
-        /*Map.Entry<String, Integer> ans = empMap.entrySet().stream()
-                .sorted((e1, e2) -> e2.getValue()-e1.getValue())
-                .skip(n-1)
-                .findFirst().get();
-        System.out.println(ans);*/
+        Integer n = 2;
+        // using groupingBy
+        *//*System.out.println(findNthHighestSalary(n, empMap));*//*
+        Map<Integer, List<String>> collect = empMap.entrySet().stream()
+                .collect(Collectors.groupingBy(entry -> entry.getValue(),
+                        Collectors.mapping(entry -> entry.getKey(), Collectors.toList())));
+        System.out.println(collect);*/
+
+        //Q: Java 8 program to find all the elements of the array starting with 1
+        /*int[] numbers = {5, 9, 11, 2, 8, 21, 1};
+        List<Integer> collect = Arrays.stream(numbers).boxed().map(n -> n + "")
+                .filter(n -> n.startsWith("1")).map(n -> Integer.valueOf(n))
+                .collect(Collectors.toList());
+        System.out.println(collect);*/
 
     }
+
+    //without using groupingBy Nth Salary question without emp name
+    public static Integer findNthHighestSalary(Integer n, Map<String, Integer> map) {
+        Set<Integer> intSet= new HashSet<>();
+        intSet = map.entrySet()
+                .stream()
+                .sorted((n1, n2) -> n2.getValue() - n1.getValue())
+                .map(entry -> entry.getValue())
+                .collect(Collectors.toSet());
+        List<Integer> uList = new ArrayList<>(intSet);
+        return uList.stream().sorted(Comparator.reverseOrder()).skip(n-1).findFirst().get();
+    }
+
+
 }
 
 @Data
